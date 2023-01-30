@@ -39,6 +39,21 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- 
+            The spring-boot-starter-parent declares a native profile
+            that configures the executions that need to run in order
+            to create a native image. You can activate profiles using
+            the -P flag on the command line.
+
+            If you don’t want to use spring-boot-starter-parent
+            you’ll need to configure executions for the process-aot goal
+            from Spring Boot’s plugin and the add-reachability-metadata goal
+            from the Native Build Tools plugin.
+
+            To build the image, you can run the spring-boot:build-image goal
+            with the native profile active:
+            $ mvn -Pnative spring-boot:build-image
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -62,15 +77,18 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
+                <!-- Maybe configuration below isn't need in some cases
+                     and can be commented out. -->
                 <configuration>
                     <buildArgs>
                     -H:ReflectionConfigurationFiles=reflect-config.json
                     -H:ConfigurationFileDirectories=./config
                     </buildArgs>
-                    </configuration>
+                </configuration>
                 <executions>
                     <execution>
                         <id>build-native</id>
+                        <!-- some history on this at https://github.com/graalvm/native-build-tools/issues/273 -->
                         <goals>
                             <goal>compile-no-fork</goal>
                         </goals>
