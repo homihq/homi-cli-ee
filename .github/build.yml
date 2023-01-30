@@ -1,0 +1,33 @@
+name: GraalVM Native Image builds
+on: [push, pull_request]
+jobs:
+  build:
+    name: HomiCliEeApplication on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.3.0'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'maven'
+
+      - name: Build and run HomiCliEeApplication.java
+        run: |
+          echo 'public class HomiCliEeApplication { public static void main(String[] args) { System.out.println("Hello, HOMI!"); } }' > HomiCliEeApplication.java
+          javac HomiCliEeApplication.java
+          native-image HomiCliEeApplication
+          ./HomiCliEeApplication
+      
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: HomiCliEeApplication-${{ matrix.os }}
+          path: HomiCliEeApplication*
