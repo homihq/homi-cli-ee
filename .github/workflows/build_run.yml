@@ -1,4 +1,4 @@
-name: GraalVM Native Image builds
+name: GraalVM Native Image build/run
 on: [push, pull_request]
 jobs:
   build:
