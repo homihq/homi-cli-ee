@@ -24,7 +24,7 @@ jobs:
           echo 'public class HomiCliEeApplication { public static void main(String[] args) { System.out.println("Hello, HOMI!"); } }' > HomiCliEeApplication.java
           javac HomiCliEeApplication.java
           native-image HomiCliEeApplication
-          ./HomiCliEeApplication
+          ./homiclieeapplication
       
       - name: Upload binary
         uses: actions/upload-artifact@v2
